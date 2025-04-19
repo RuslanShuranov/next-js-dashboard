@@ -31,14 +31,12 @@ export type State = {
   message?: string | null;
 };
 
-export const createInvoice = async (prevState: State, formData: FormData) => {
+export const createInvoice = async (_: State, formData: FormData) => {
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
     status: formData.get('status'),
   });
-
-  console.log('validatedFields', validatedFields);
 
   if (!validatedFields.success) {
     return {
@@ -65,12 +63,21 @@ export const createInvoice = async (prevState: State, formData: FormData) => {
   redirect('/dashboard/invoices');
 };
 
-export const updateInvoice = async (id: string, formData: FormData) => {
-  const { customerId, amount, status } = UpdateInvoice.parse({
+export const updateInvoice = async (id: string, _: State, formData: FormData) => {
+  const validatedFields = UpdateInvoice.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
     status: formData.get('status'),
   });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Invoice.',
+    };
+  }
+
+  const { customerId, amount, status } = validatedFields.data;
 
   const amountInCents = amount * 100;
 
