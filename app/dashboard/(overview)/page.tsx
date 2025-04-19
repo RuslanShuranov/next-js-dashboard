@@ -5,6 +5,11 @@ import { Suspense } from 'react';
 import { CardsSkeleton, LatestInvoicesSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
 import { Card } from '@/app/ui/dashboard/cards';
 import { fetchCardData } from '@/app/lib/data';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+};
 
 const Dashboard = async () => {
   const { numberOfCustomers, numberOfInvoices, totalPaidInvoices, totalPendingInvoices } =
