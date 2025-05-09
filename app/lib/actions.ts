@@ -1,13 +1,11 @@
 'use server';
 
 import { z } from 'zod';
-import postgres from 'postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+import prisma from '@/lib/prisma';
 
 export const authenticate = async (prevState: string | undefined, formData: FormData) => {
   try {
@@ -65,13 +63,17 @@ export const createInvoice = async (_: State, formData: FormData) => {
 
   const { customerId, amount, status } = validatedFields.data;
   const amountInCents = Math.round(amount * 100);
-  const date = new Date().toISOString().split('T')[0];
+  const date = new Date();
 
   try {
-    await sql`
-      INSERT INTO invoices (customer_id, amount, status, date)
-      VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-    `;
+    await prisma.invoices.create({
+      data: {
+        customer_id: customerId,
+        amount: amountInCents,
+        status,
+        date,
+      },
+    });
   } catch (error) {
     console.error('Error creating invoice:', error);
     throw new Error('Failed to create invoice');
@@ -100,11 +102,16 @@ export const updateInvoice = async (id: string, _: State, formData: FormData) =>
   const amountInCents = amount * 100;
 
   try {
-    await sql`
-    UPDATE invoices
-    SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-    WHERE id = ${id}
-  `;
+    await prisma.invoices.update({
+      where: {
+        id: id,
+      },
+      data: {
+        customer_id: customerId,
+        amount: amountInCents,
+        status: status,
+      },
+    });
   } catch (error) {
     console.error('Error updating invoice:', error);
     throw new Error('Failed to update invoice');
@@ -116,9 +123,11 @@ export const updateInvoice = async (id: string, _: State, formData: FormData) =>
 
 export const deleteInvoice = async (id: string) => {
   try {
-    await sql`DELETE
-            FROM invoices
-            WHERE id = ${id}`;
+    await prisma.invoices.delete({
+      where: {
+        id: id,
+      },
+    });
   } catch (error) {
     console.error('Error deleting invoice:', error);
     throw new Error('Failed to delete invoice');

@@ -3,10 +3,9 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
 import { fetchLatestInvoices } from '@/app/lib/data';
-import { LatestInvoice } from '@/app/lib/definitions';
 
 const LatestInvoices = async () => {
-  const latestInvoices: LatestInvoice[] = await fetchLatestInvoices();
+  const latestInvoices = await fetchLatestInvoices();
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
@@ -23,15 +22,19 @@ const LatestInvoices = async () => {
               >
                 <div className="flex items-center">
                   <Image
-                    src={invoice.image_url}
-                    alt={`${invoice.name}'s profile picture`}
+                    src={invoice.customer.image_url}
+                    alt={`${invoice.customer.name}'s profile picture`}
                     className="mr-4 rounded-full"
                     width={32}
                     height={32}
                   />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold md:text-base">{invoice.name}</p>
-                    <p className="hidden text-sm text-gray-500 sm:block">{invoice.email}</p>
+                    <p className="truncate text-sm font-semibold md:text-base">
+                      {invoice.customer.name}
+                    </p>
+                    <p className="hidden text-sm text-gray-500 sm:block">
+                      {invoice.customer.email}
+                    </p>
                   </div>
                 </div>
                 <p className={`${lusitana.className} truncate text-sm font-medium md:text-base`}>
