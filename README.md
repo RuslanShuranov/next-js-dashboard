@@ -1,1 +1,4 @@
-Live App: https://dashboard-eeytj4g9x-ruslan-shuranovs-projects.vercel.app/
+Live App: https://dashboard-cmpg4yi7p-ruslan-shuranovs-projects.vercel.app/
+###### Login credentials:
+###### Email: user@nextmail.com
+###### Password: 123456
