@@ -28,18 +28,18 @@ Check out the live application: [Next.js Dashboard](https://dashboard-ruslan-shu
 ``` bash
    pnpm install
 ```
-1. Set up environment variables (see ): `.env.example`
+3. Set up environment variables (see ): `.env.example`
 ``` 
    DATABASE_URL=your_postgresql_connection_string
    AUTH_SECRET=your_auth_secret
    AUTH_URL=http://localhost:3000/api/auth
 ```
-1. Generate Prisma client and run migrations:
+4. Generate Prisma client and run migrations:
 ``` bash
    pnpm prisma generate
    pnpm prisma migrate dev
 ```
-1. Run the development server:
+5. Run the development server:
 ``` bash
    pnpm dev
 ```
